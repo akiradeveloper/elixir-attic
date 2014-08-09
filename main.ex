@@ -35,10 +35,16 @@ IO.puts "to_string: #{Kernel.to_string(String)}"
 # comprehension (generator and guard)
 for n <- 1..10, Integer.odd?(n), Integer.even?(n), do: IO.puts Fib.run(n) # print nothing
 
+# With into: option we can type the return value as specified.
+# <<xxx::n>> is used here to specify the size of each chunk (Maybe..)
+IO.puts inspect for n <- 1..10, do: <<Fib.run(n)::size(8)>>, into: ""
+
 l = [1, "a", 'a'] # list can holds differenct types
 kl = [a: 1, b: 2] # keyword list
 m = %{"a" => 1, :a => 2} # map
+m2 = %{ m | "a" => 3 }
 km = %{a: 1, b: 2} # when all the keys are atoms (keyword map?)
+km2 = %{ km | a: 3 }
 
 # if-else (or unless-else) is an expression
 x = unless false do 1 else 2 end
@@ -73,3 +79,14 @@ IO.puts inspect List.flatten [1,[2],3]
 IO.puts inspect Elixir.List.flatten [1,[2],3]
 IO.puts inspect :Elixir.List.flatten [1,[2],3]
 IO.puts Kernel.to_string(List)
+
+defmodule Person do
+  defstruct name: ""
+end
+
+IO.puts Kernel.to_string Person
+# %Person{} # [BUG] Why can I access Person struct?
+
+# Sigil (An inscribed or painted symbol considered to have magical power)
+# sigil_r "foo", 'i' # no function clause matching in Kernel.sigil_r/2
+sigil_r <<"foo">>, 'i'
